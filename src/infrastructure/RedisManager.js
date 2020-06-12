@@ -2,6 +2,7 @@ const config = require('../../config'),
       redis = require('redis'),
       token_generator = require('uuid-random');
 
+
 const client = redis.createClient(config.database.redis.port);
 exports.client = client;
 
@@ -15,12 +16,43 @@ class RedisManager{
         return token;
     }
 
-    static deleteSession(token){
-        client.del(token);
+    static async deleteSession(token){
+        return new Promise((resolve, reject) => {
+            client.del(token, (err, data) => {
+                if(err) reject(err);
+                resolve(data);
+            });
+        });
     }
 
-    static validateSession(req, res, next){
-        let {token} = req.body;
+    static validateSessionWithContinue(req, res, next){
+        let token = req.params.token;
+        if(token){
+            client.get(token, (err, id) => {
+                if(err){
+                    console.log(err);
+                    res.status(500).send(err);
+                }
+    
+                if(id == null){
+                    res.json({
+                        success: false,
+                        messages: 'Deneid access, the user dont have a token.',
+                    });
+                }else{
+                    next();
+                }
+            });
+        }else{
+            res.json({
+                success: false,
+                messages: 'Deneid access, the user dont have a token.',
+            });
+        }
+    }
+
+    static validateSessionWithOutContinue(req, res, next){
+        let token = req.body.token;
         if(token){
             client.get(token, (err, id) => {
                 if(err){
@@ -43,6 +75,18 @@ class RedisManager{
         }else{
             next();
         }
+    }
+
+    static async getEmail(token){
+        return await new Promise((resolve, reject) => {
+            client.get(token, (err, data) => {
+                if(err){
+                    reject(err);
+                }else{
+                    resolve(data);
+                }
+            });
+        });
     }
 }
 

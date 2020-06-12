@@ -6,7 +6,8 @@ const express = require('express'),
 
 //route files
 const index_router = require('./src/routes/index.route'),
-      user_router = require('./src/routes/user.route');
+      user_router = require('./src/routes/user.route'),
+      utilities_router = require('./src/routes/utilities.route');
 
 //main objects
 const api = express();
@@ -21,5 +22,6 @@ api.use(express.static(path.join(__dirname, 'public')));
 //API routes
 api.use('/', index_router);
 api.use('/user', user_router);
+api.use('/utilities', utilities_router);
 
 module.exports = api;

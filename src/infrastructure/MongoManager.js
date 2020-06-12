@@ -24,10 +24,10 @@ class MongoManager{
             let collection = db.collection('user');
             let query = await collection.findOne({email: email});
             result = query;
+            client.close();
         }catch(e){
             console.log(e);
         }finally{
-            client.close();
             return result;
         }
     }

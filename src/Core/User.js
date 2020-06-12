@@ -1,7 +1,8 @@
 const Model = require('./Model'),
       MongoManager = require('../infrastructure/MongoManager'),
       RedisManager = require('../infrastructure/RedisManager'),
-      crypt = require('../tools/crypt');
+      crypt = require('../tools/crypt'),
+      Responser = require('../tools/Responser');
 
 class User extends Model{
     constructor({name = "", nickname = "", email  = "", password = ""} = {}){
@@ -21,6 +22,29 @@ class User extends Model{
             email: this.email,
             password: this.password
         }
+    }
+
+    static async getData(token){
+        let result = new Responser();
+
+        try{
+            let email = await RedisManager.getEmail(token);
+            if(!email) throw 'This session is broken.';
+
+            let exists = await MongoManager.emailExists(email);
+            if(!exists) throw 'Your session is broken, logout to fix them.';
+
+            result.setSuccess({
+                data: {
+                    player: exists
+                }
+            });
+        }catch(e){
+            console.log(e);
+            result.errors = e;
+        }
+
+        return result;
     }
 
     async hashPassword(password){
@@ -85,10 +109,11 @@ class User extends Model{
                 messages: 'You have been registered succesfully',
                 data: {token: token}
             });
+
+            client.close();
         }catch(e){
             this.setError(e);
         }finally{
-            client.close();
             return this.getOutput();
         }
     }
