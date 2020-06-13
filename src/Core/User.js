@@ -34,6 +34,10 @@ class User extends Model{
             let exists = await MongoManager.emailExists(email);
             if(!exists) throw 'Your session is broken, logout to fix them.';
 
+            delete exists.password;
+            delete exists.date;
+            delete exists._id;
+            
             result.setSuccess({
                 data: {
                     player: exists
