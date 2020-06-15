@@ -88,6 +88,33 @@ class RedisManager{
             });
         });
     }
+
+    static async setRoomShortCode(code, roomID){
+        return new Promise((resolve, reject) => {
+            client.set(code, roomID, (err, rep) => {
+                if(err) reject(err);
+                resolve(rep);
+            });
+        });
+    }
+
+    static async getRoomID(code){
+        return new Promise((resolve, reject) => {
+            client.get(code, (err, rep) => {
+                if(err) reject(err);
+                resolve(rep);
+            });
+        });
+    }
+
+    static async deleteShortCode(code){
+        return new Promise((resolve, reject) => {
+            client.del(code, (err, rep) => {
+                if(err) reject(err);
+                resolve(rep);
+            });
+        });
+    }
 }
 
 module.exports = RedisManager;
