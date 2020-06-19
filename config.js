@@ -6,7 +6,7 @@ const host_config = {
 
 const mongo_config = {
     port: 27017,
-    hostname: host_config.hostname
+    hostname: '192.168.1.83'
 };
 
 module.exports = {
@@ -32,7 +32,8 @@ module.exports = {
             }
         },
         redis:{
-            port: 6379
+            port: 6379,
+            host: '192.168.1.83'
         }
     }
 };

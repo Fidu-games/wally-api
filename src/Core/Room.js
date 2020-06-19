@@ -83,6 +83,24 @@ class Room extends Model{
             return res;
         }
     }
+
+    static async roomExists(id){
+        let res = new Responser();
+        try{
+            console.log(`Room ID: ${id}`);
+            let trueID_cache = await RedisManager.getRoomID(id);
+            if(!trueID_cache) throw 'The room doesn\'t have acces or doesn\'t exists';
+            res.setSuccess({
+                messages: 'the room exists',
+                data: { roomID: trueID_cache }
+            });
+        }catch(e){
+            console.log(e);
+            res.errors = e;
+        }finally{
+            return res;
+        }
+    }
 }
 
 module.exports = Room;

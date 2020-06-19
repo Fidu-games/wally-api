@@ -38,3 +38,21 @@ exports.deleteRoom = [
         res.send(deleteRoom);
     }
 ];
+
+exports.roomExists = [
+    (req, res, next) => {
+        let result = validate.evalRecivedData(req.params, "roomID");
+        if(!result.ok) {
+            res.status(422)
+            res.json({
+                messages: `Invalid data: ${result.evaluated}`
+            });
+        }
+        next();
+    },
+    async (req, res) => {
+        let  { roomID } = req.params;
+        let roomConsultResult = await Room.roomExists(roomID);
+        res.json(roomConsultResult);
+    }
+];

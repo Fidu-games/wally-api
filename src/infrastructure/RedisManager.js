@@ -3,7 +3,7 @@ const config = require('../../config'),
       token_generator = require('uuid-random');
 
 
-const client = redis.createClient(config.database.redis.port);
+const client = redis.createClient(config.database.redis.port, config.database.redis.host);
 exports.client = client;
 
 const minut = 60; 
@@ -90,7 +90,7 @@ class RedisManager{
     }
 
     static async setRoomShortCode(code, roomID){
-        return new Promise((resolve, reject) => {
+        return await new Promise((resolve, reject) => {
             client.set(code, roomID, (err, rep) => {
                 if(err) reject(err);
                 resolve(rep);
@@ -99,7 +99,7 @@ class RedisManager{
     }
 
     static async getRoomID(code){
-        return new Promise((resolve, reject) => {
+        return await new Promise((resolve, reject) => {
             client.get(code, (err, rep) => {
                 if(err) reject(err);
                 resolve(rep);
@@ -108,7 +108,7 @@ class RedisManager{
     }
 
     static async deleteShortCode(code){
-        return new Promise((resolve, reject) => {
+        return await new Promise((resolve, reject) => {
             client.del(code, (err, rep) => {
                 if(err) reject(err);
                 resolve(rep);
