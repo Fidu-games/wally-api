@@ -2,12 +2,12 @@ const Model = require('./Model'),
       uuid = require('uuid-random'),
       MongoManager = require('../infrastructure/MongoManager'),
       RedisManager = require('../infrastructure/RedisManager'),
-      Responser = require('../tools/Responser'),
-      config = require('../../config');
+      Responser = require('../tools/Responser');
 
-class Room extends Model{
+class Room extends Model {
     constructor(roomID = '', playersLimit = 6){
-        this.roomID = roomID != '' ? roomID : uuid();
+        super();
+        this.roomID = roomID ? roomID : uuid();
         this.playersLimit = playersLimit;
     }
 
@@ -18,7 +18,7 @@ class Room extends Model{
         }
     }
 
-    static getTempShortCode(digits = 6){
+    static getTempShortCode(digits = 6) {
         let code = '', i, number;
         for(i = 0; i < digits; i++){
             number = Math.floor(Math.random() * 9);
@@ -29,18 +29,15 @@ class Room extends Model{
 
     static async createRoom(id, limit){
         let res = new Responser();
+        let collection, client;
 
         try{
-            let client = await MongoManager.getClient();
-            let db = client.db(config.database.mongo.db);
-            let collection = db.collection('room');
+            [collection, client] = await MongoManager.getCollection('room');
             let insert = await collection.insertOne({
                 roomID: id,
                 limit: limit
             });
             if(!insert.result.ok) throw 'The room couldn\'t be registered';
-
-            client.close();
 
             let short = Room.getTempShortCode();
             let codeRegistResult = await RedisManager.setRoomShortCode(short, id);
@@ -57,31 +54,33 @@ class Room extends Model{
             console.log(e);
             res.errors = e;
         }finally{
-            return res;
+            client.close();
         }
+        
+        return res;
     }
 
     static async deleteRoom(id){
         let res = new Responser();
+        let collection, client;
 
         try{
-            let client = await MongoManager.getClient();
-            let db = client.db(config.database.mongo.db);
-            let query = {roomID: id};
-            let remove = await db.collection('room').deleteOne(query);
+            [collection, client] = await MongoManager.getCollection('room');
+            let remove = await collection.deleteOne({roomID: id});
             if(!remove) throw 'The room could not be deleted';
 
             res.setSuccess({
                 messages: 'Se ha eliminado el cuarto correctamente'
             });
 
-            client.close();
         }catch(e){
-            res.errors = e;
             console.log(e);
+            res.errors = e;
         }finally{
-            return res;
+            client.close();
         }
+
+        return res;
     }
 
     static async roomExists(id){

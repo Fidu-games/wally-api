@@ -9,6 +9,7 @@ const UserController = require('../controllers/user.controller');
 //     next(); 
 // });
 
+//user/...
 router.get('/:token', UserController.getUser);
 router.delete('/session', UserController.closeSession);
 router.post('/login', UserController.login);

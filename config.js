@@ -1,15 +1,18 @@
+require('dotenv').config();
+
 const host_config = {
-      hostname: '192.168.1.76',
+      hostname: '192.168.1.73',
       port: 8080,
       protocol: 'http'
 };
 
 const mongo_config = {
     port: 27017,
-    hostname: '192.168.1.83'
+    hostname: 'localhost'
 };
 
 module.exports = {
+    authJWTSecret: process.env.ACCESS_KEY,
     host: {
         hostname: host_config.hostname,
         port: host_config.port,
@@ -17,10 +20,10 @@ module.exports = {
         url: `${host_config.protocol}://${host_config.hostname}:${host_config.port}`
     },
     peerServer:{
-        hostname: '127.0.0.1',
+        hostname: '192.168.1.73',
         protocol: 'http',
         port: 8081,
-        url: 'http://127.0.0.1:8081'
+        url: 'http://192.168.1.73:8081'
     },
     database:{
         mongo:{
@@ -30,10 +33,6 @@ module.exports = {
                 useNewUrlParser: true,
                 useUnifiedTopology: true
             }
-        },
-        redis:{
-            port: 6379,
-            host: '192.168.1.83'
         }
     }
 };
