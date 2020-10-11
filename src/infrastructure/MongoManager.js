@@ -25,7 +25,7 @@ class MongoManager {
   }
 }
 
-module.exports = MongoManager
+exports.mongoManager = MongoManager
 
 exports.performQuery = async (collectionName, querier) => {
   const result = new Responser()
@@ -37,7 +37,6 @@ exports.performQuery = async (collectionName, querier) => {
     const queryResult = await querier(collection)
     result.setSuccess({ data: queryResult })
   } catch (error) {
-    console.log(error)
     result.errors = error.message
   } finally {
     client.close()

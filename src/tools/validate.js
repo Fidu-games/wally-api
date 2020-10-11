@@ -36,9 +36,9 @@ exports.tokenValidator = (req, res, next) => {
     const token = tokenHeader.split(' ')[1]
 
     if (token) {
-      JWT.verify(token, config.authJWTSecret, (error, { user }) => {
+      JWT.verify(token, config.authJWTSecret, (error, data) => {
         if (!error) {
-          req.userID = user
+          req.playerID = data.playerID
           next()
         } else {
           res.sendStatus(403)

@@ -1,9 +1,9 @@
 module.exports = class Responser {
-  constructor ({ success = false, data = {}, errors = '', messages = '' }) {
-    this.success = success
-    this.data = data
-    this.errors = errors
-    this.messages = messages
+  constructor () {
+    this.success = false
+    this.data = {}
+    this.errors = ''
+    this.messages = ''
   }
 
   setSuccess ({ messages = '', data = {} }) {

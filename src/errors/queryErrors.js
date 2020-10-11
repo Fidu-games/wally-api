@@ -17,7 +17,7 @@ class QueryError extends Error {
   }
 }
 
-module.exports = QueryError
+exports.QueryError = QueryError
 
 class ResourceError extends QueryError {
   constructor (message, resource, collection, originalError = '') {
@@ -27,8 +27,7 @@ class ResourceError extends QueryError {
   }
 
   toString () {
-    return `${this.errorType}: ${this.resource} doesnt exists at ${this.collection}
-            \nDescription: ${this.message}`
+    return `${this.errorType}: ${this.resource} doesnt exists at ${this.collection}.\nDescription: ${this.message}`
   }
 }
 

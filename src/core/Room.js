@@ -1,13 +1,11 @@
-const Model = require('./Model')
 const uuid = require('uuid-random')
 const MongoManager = require('../infrastructure/MongoManager')
-const RedisManager = require('../infrastructure/RedisManager')
+// const RedisManager = require('../infrastructure/RedisManager')
 const Responser = require('../tools/Responser')
 const { QueryError } = require('../errors/queryErrors')
 
-class Room extends Model {
+class Room {
   constructor (roomID = '', playersLimit = 6) {
-    super()
     this.roomID = roomID || uuid()
     this.playersLimit = playersLimit
   }
@@ -43,8 +41,8 @@ class Room extends Model {
       if (!insert.result.ok) throw new QueryError('The room couldn\'t be registered', 'room')
 
       const short = Room.getTempShortCode()
-      const codeRegistResult = await RedisManager.setRoomShortCode(short, id)
-      if (!codeRegistResult) throw new QueryError("The room couldn't be registered", 'room')
+      // const codeRegistResult = await RedisManager.setRoomShortCode(short, id)
+      // if (!codeRegistResult) throw new QueryError("The room couldn't be registered", 'room')
 
       res.setSuccess({
         messages: 'The room has been registered',
@@ -88,18 +86,18 @@ class Room extends Model {
 
   static async roomExists (id) {
     const res = new Responser()
-    try {
-      console.log(`Room ID: ${id}`)
-      const trueIDCache = await RedisManager.getRoomID(id)
-      if (!trueIDCache) throw new Error('You do not have acces to this room or it doesn\'t exists')
-      res.setSuccess({
-        messages: 'the room exists',
-        data: { roomID: trueIDCache }
-      })
-    } catch (e) {
-      console.log(e)
-      res.errors = e
-    }
+    // try {
+    //   console.log(`Room ID: ${id}`)
+    //   const trueIDCache = await RedisManager.getRoomID(id)
+    //   if (!trueIDCache) throw new Error('You do not have acces to this room or it doesn\'t exists')
+    //   res.setSuccess({
+    //     messages: 'the room exists',
+    //     data: { roomID: trueIDCache }
+    //   })
+    // } catch (e) {
+    //   console.log(e)
+    //   res.errors = e
+    // }
 
     return res
   }
