@@ -4,8 +4,9 @@ const { tokenValidator } = require('../tools/validate')
 
 router.use(tokenValidator)
 
+router.get('/:roomID', RoomController.getRoom)
 router.post('/create', RoomController.createRoom)
-router.delete('/delete', RoomController.deleteRoom)
-router.get('/exists/:roomID', RoomController.roomExists)
+router.delete('/:roomID', RoomController.deleteRoom)
+router.get('/:roomID/exists', RoomController.roomExists)
 
 module.exports = router

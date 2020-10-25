@@ -19,6 +19,7 @@ class Player {
     this.name = name
     this.nickname = nickname
     this.email = email
+    this.date = Date.now()
   }
 
   /**
@@ -78,7 +79,7 @@ class Player {
           { playerID },
           { $set: { name, nickname } }
         )
-        if (!update.result.ok) throw new QueryError('cannot update the user correctly', 'player', result)
+        if (!update.result.ok) throw new QueryError('cannot update the user correctly', 'player', update)
       }
     ))
   }
@@ -96,7 +97,7 @@ class Player {
           { playerID },
           { $set: { email } }
         )
-        if (!update.result.ok) throw new QueryError('cannot update the email', 'player', result)
+        if (!update.result.ok) throw new QueryError('cannot update the email', 'player', update)
         return true
       }
     ))

@@ -1,7 +1,7 @@
 require('dotenv').config()
 
 const hostConfig = {
-  hostname: '192.168.0.102',
+  hostname: 'localhost',
   port: 8080,
   protocol: 'http'
 }
@@ -20,10 +20,10 @@ module.exports = {
     url: `${hostConfig.protocol}://${hostConfig.hostname}:${hostConfig.port}`
   },
   peerServer: {
-    hostname: '192.168.0.102',
+    hostname: 'localhost',
     protocol: 'http',
     port: 8081,
-    url: 'http://192.168.0.102:8081'
+    url: 'http://localhost:8081'
   },
   database: {
     mongo: {

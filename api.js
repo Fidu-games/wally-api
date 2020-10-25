@@ -5,10 +5,9 @@ const morgan = require('morgan')
 const cors = require('cors')
 
 // route files
-// const indexRouter = require('./src/routes/index.route')
 const authRouter = require('./src/routes/auth.route')
 const playerRouter = require('./src/routes/player.route')
-// const roomRouter = require('./src/routes/room.route')
+const roomRouter = require('./src/routes/room.route')
 
 // main objects
 const api = express()
@@ -21,9 +20,8 @@ api.use(express.urlencoded({ extended: false }))
 api.use(express.static(path.join(__dirname, 'public')))
 
 // API routes
-// api.use('/', indexRouter)
 api.use('/auth', authRouter)
 api.use('/player', playerRouter)
-// api.use('/room', roomRouter)
+api.use('/room', roomRouter)
 
 module.exports = api
